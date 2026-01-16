@@ -5,7 +5,7 @@
 
 </div>
 
-It allows Fullscreen themes to display your friends’ achievements in fullscreen — using data provided by the original FriendsAchievementFeed plugin.
+It allows Fullscreen themes to display your friends’ achievements in fullscreen — using data provided by the original [FriendsAchievementFeed](https://github.com/justin-delano/playnite-friendsachievementfeed-plugin) Plugin.
 
 This plugin does not show anything by itself.
 It simply makes the data usable by Fullscreen themes.
