@@ -12,20 +12,20 @@ It simply makes the data usable by Fullscreen themes.
 
 How it works
 
-> FriendsAchievementFeed fetches achievements and stores them in a cache
-> This companion plugin reads that cache
-> Your Fullscreen theme displays the data however it wants
-> Think of it as a translator between the original plugin and Fullscreen UI.
+> - FriendsAchievementFeed fetches achievements and stores them in a cache
+> - This companion plugin reads that cache
+> - Your Fullscreen theme displays the data however it wants
+> - Think of it as a translator between the original plugin and Fullscreen UI.
 
 ---
 
 What this plugin does NOT do
 
-> It does not fetch achievements by itself
-> It does not replace FriendsAchievementFeed
-> It does not provide any UI or menu
-> It does not run constantly in the background
-> It simply loads data once and exposes it to Fullscreen themes.
+> - It does not fetch achievements by itself
+> - It does not replace FriendsAchievementFeed
+> - It does not provide any UI or menu
+> - It does not run constantly in the background
+> - It simply loads data once and exposes it to Fullscreen themes.
 
 ---
 
