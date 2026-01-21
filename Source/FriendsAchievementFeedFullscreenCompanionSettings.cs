@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Globalization;
 
 namespace FriendsAchievementFeedFullscreenCompanion
 {
@@ -150,6 +151,8 @@ namespace FriendsAchievementFeedFullscreenCompanion
         public int AppId { get; set; }
 
         public string GameName { get; set; } = string.Empty;
+        public string GameCoverImage { get; set; } = string.Empty;
+        public string GameIcon { get; set; } = string.Empty;
 
         public string FriendPersonaName { get; set; } = string.Empty;
         public string FriendAvatarUrl { get; set; } = string.Empty;
@@ -189,6 +192,8 @@ namespace FriendsAchievementFeedFullscreenCompanion
         public string FriendPersonaName { get; set; } = string.Empty;
         public string FriendAvatarUrl { get; set; } = string.Empty;
         public string GameName { get; set; } = string.Empty;
+        public string GameCoverImage { get; set; } = string.Empty;
+        public string GameIcon { get; set; } = string.Empty;
 
         public string AchievementDisplayName { get; set; } = string.Empty;
         public string AchievementDescription { get; set; } = string.Empty;
@@ -203,6 +208,8 @@ namespace FriendsAchievementFeedFullscreenCompanion
         public string FriendPersonaName { get; set; } = string.Empty;
         public string FriendAvatarUrl { get; set; } = string.Empty;
         public string GameName { get; set; } = string.Empty;
+        public string GameCoverImage { get; set; } = string.Empty;
+        public string GameIcon { get; set; } = string.Empty;
         public string FriendSteamId { get; set; } = string.Empty;
         private string friendAvatarPath = string.Empty;
         public string FriendAvatarPath
@@ -370,6 +377,42 @@ namespace FriendsAchievementFeedFullscreenCompanion
 
                 if (current == null || eventId != lastEventId)
                 {
+                    Game dbGame = null;
+
+                    try
+                    {
+                        if (it.PlayniteGameId.HasValue)
+                        {
+                            dbGame = plugin?.PlayniteApi?.Database?.Games?.Get(it.PlayniteGameId.Value);
+
+                        }
+                    }
+                    catch
+                    {
+                        dbGame = null;
+                    }
+
+                    string cover = string.Empty;
+                    string icon = string.Empty;
+
+                    try
+                    {
+                        if (dbGame != null)
+                        {
+                            if (!string.IsNullOrWhiteSpace(dbGame.CoverImage))
+                                cover = plugin.PlayniteApi.Database.GetFullFilePath(dbGame.CoverImage) ?? string.Empty;
+
+                            if (!string.IsNullOrWhiteSpace(dbGame.Icon))
+                                icon = plugin.PlayniteApi.Database.GetFullFilePath(dbGame.Icon) ?? string.Empty;
+                        }
+                    }
+                    catch
+                    {
+                        cover = string.Empty;
+                        icon = string.Empty;
+                    }
+
+
                     current = new FriendAchievementGroupView
                     {
                         EventId = eventId,
@@ -378,14 +421,19 @@ namespace FriendsAchievementFeedFullscreenCompanion
 
                         FriendAvatarUrl = it.FriendAvatarUrl ?? string.Empty,
                         FriendAvatarPath = !string.IsNullOrEmpty(it.FriendAvatarPath)
-                        ? it.FriendAvatarPath
-                        : (it.FriendAvatarUrl ?? string.Empty),
+                            ? it.FriendAvatarPath
+                            : (it.FriendAvatarUrl ?? string.Empty),
 
                         GameName = it.GameName ?? string.Empty,
+
+                        GameCoverImage = cover,   
+                        GameIcon = icon,          
+
                         HeaderTitle = BuildHeaderTitle(it),
                         HeaderSubtitle = BuildHeaderSubtitle(it),
                         IsExpanded = false
                     };
+
 
 
                     Settings.FriendGroups.Add(current);
@@ -436,8 +484,14 @@ namespace FriendsAchievementFeedFullscreenCompanion
 
             var gameKey = (it.GameName ?? string.Empty).Trim();
 
-            return $"{friendKey}|{gameKey}";
+            // Group by local day
+            var dayKey = it.UnlockTimeUtc.HasValue
+                ? it.UnlockTimeUtc.Value.ToLocalTime().ToString("yyyy-MM-dd")
+                : "unknown-date";
+
+            return $"{friendKey}|{gameKey}|{dayKey}";
         }
+
 
         private string BuildHeaderTitle(FriendAchievementEntryView it)
         {
@@ -465,20 +519,13 @@ namespace FriendsAchievementFeedFullscreenCompanion
             if (!it.UnlockTimeUtc.HasValue)
                 return string.Empty;
 
-            var dateFormat = GetLocOrFallback(
-                "LOCFriendsAchievementFeed_DateFormat",
-                "dd MMMM yyyy"
-            );
+            var local = it.UnlockTimeUtc.Value.ToLocalTime();
 
-            try
-            {
-                return it.UnlockTimeUtc.Value.ToLocalTime().ToString(dateFormat);
-            }
-            catch
-            {
-                return it.UnlockTimeUtc.Value.ToLocalTime().ToString("dd MMMM yyyy");
-            }
+            // "D" = date longue locale 
+            // "d" = date courte locale 
+            return local.ToString("d", CultureInfo.CurrentCulture);
         }
+
 
 
         private string GetLocOrFallback(string key, string fallback)
