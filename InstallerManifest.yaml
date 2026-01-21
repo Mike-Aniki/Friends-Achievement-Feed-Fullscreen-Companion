@@ -6,3 +6,9 @@ Packages:
     PackageUrl: https://github.com/Mike-Aniki/Friends-Achievement-Feed-Fullscreen-Companion/releases/download/v1.0/FriendsAchievementFeedFullscreenCompanion_9fc60469-d8db-4dec-b5c8-65b4b5a88123_1_0.pext
     Changelog:
       - First public release build
+  - Version: 1.1
+    RequiredApiVersion: 6.12.0
+    ReleaseDate: 2026-01-21
+    PackageUrl: https://github.com/Mike-Aniki/Friends-Achievement-Feed-Fullscreen-Companion/releases/download/v1.1/FriendsAchievementFeedFullscreenCompanion_9fc60469-d8db-4dec-b5c8-65b4b5a88123_1_1.pext
+    Changelog:
+      - Added support for displaying the game cover and game icon in the friends achievements feed.
